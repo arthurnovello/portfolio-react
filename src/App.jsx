@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -21,6 +21,23 @@ function App() {
     { id: 'blog', label: 'Textos'},
     { id: 'gallery', label: 'Fotos'},
   ];
+
+  // Header Img List
+  const headerImages = [
+
+    'src/assets/images/header-bg-1.jpg',
+    'src/assets/images/header-bg-2.jpg'
+
+  ];
+ 
+ // Random Index for Header
+  const [randomImage, setRandomImage] = useState('');
+
+  useEffect(() => {
+    // Select random image
+    const randomIndex = Math.floor(Math.random() * headerImages.length);
+    setRandomImage(headerImages[randomIndex]);
+  }, []);
 
   return (
     <div className="app">
@@ -80,10 +97,20 @@ function App() {
 
       {/* Main Container */}
       <div className="container">
-        <header className="header">
-          <h1>Hello World! 🌍</h1>
-          <p className="subtitle">Welcome to my React website</p>
-          <p className="menu-hint">The menu button is always visible in the top right corner!</p>
+        <header 
+          className="header"
+          style={{
+            backgroundImage: randomImage 
+              ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), url(${randomImage})`
+              : 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <div className="header-overlay">
+
+          </div>
         </header>
 
         <main className="main-content">
