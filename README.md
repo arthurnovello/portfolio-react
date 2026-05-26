@@ -1,6 +1,22 @@
-# React + Vite
+# Project Goals & Development Plan
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This section outlines the current feature goals and architectural tasks for the portfolio site:
+
+## 💡 Migration to TypeScript
+*   Migrate the entire application stack to TypeScript.
+
+## 🎯 Current Tasks
+*   Implement Photo Gallery component for showcasing visual projects.
+*   Develop 'MiniBlog' section with dedicated routing and content display.
+
+## 🛠️ Architecture To-Do List
+*   **Refactor Component Structure:** Create a reusable `PhotoGallery` component.
+*   **Routing:** Implement dedicated routes for the blog section (`/blog`).
+*   **Data Schema:** Define consistent content schemas for photos and blog posts.
+*   **State Management:** Review and update state management for scalability.
+
+---
+(Original README content follows)
 
 Currently, two official plugins are available:
 
