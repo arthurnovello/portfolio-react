@@ -1,32 +1,69 @@
-# Project Goals & Development Plan
+# Portfolio — anovello.com.br
 
-This section outlines the current feature goals and architectural tasks for the portfolio site:
+Personal portfolio site (blog + photo gallery) for **arthurnovello**.
 
-## 💡 Migration to TypeScript
-*   Migrate the entire application stack to TypeScript.
+## Stack
 
-## 🎯 Current Tasks
-*   Implement Photo Gallery component for showcasing visual projects.
-*   Develop 'MiniBlog' section with dedicated routing and content display.
+| Layer | Tech |
+|---|---|
+| Frontend | Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 |
+| Backend | Python 3.12 + FastAPI + DuckDB (read-only) |
+| Auth | (none — public site) |
+| Storage | AWS S3 (photos + DuckDB file) |
+| CDN | AWS CloudFront (in front of S3 for images) |
+| Frontend host | Vercel (free tier) |
+| Backend host | AWS App Runner (container from ECR) |
+| IaC | AWS CDK (Python) |
+| CI/CD | GitHub Actions |
+| Content authoring | Python CLI script (updates local DuckDB → uploads to S3 → triggers App Runner redeploy) |
+| Language | pt-BR (URL slugs in English: `/blog`, `/gallery`) |
+| Domain | anovello.com.br (Route 53) |
 
-## 🛠️ Architecture To-Do List
-*   **Refactor Component Structure:** Create a reusable `PhotoGallery` component.
-*   **Routing:** Implement dedicated routes for the blog section (`/blog`).
-*   **Data Schema:** Define consistent content schemas for photos and blog posts.
-*   **State Management:** Review and update state management for scalability.
+## Repo layout
 
----
-(Original README content follows)
+```
+.
+├── frontend/                 # Next.js 15 (App Router)
+├── backend/                  # FastAPI + DuckDB + CLI  (created in Phase 2)
+├── infra/                    # AWS CDK (Python)        (created in Phase 3)
+├── docs/                     # design + diagrams
+│   ├── design/
+│   │   ├── skeleton.pdf
+│   │   └── skeleton.png
+│   └── diagrams/
+│       └── portfolio-diagram.drawio
+├── gists/                    # workflow references
+├── .github/workflows/        # CI/CD
+├── README.md
+└── AGENTS.md
+```
 
-Currently, two official plugins are available:
+## Data model (DuckDB)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `blog_posts(id, slug, title, summary, content_md, cover_image, tags[], published_at, status)`
+- `galleries(id, slug, title, description, location, date, cover_photo, sort_order, created_at)`
+- `photos(id, gallery_id, s3_key_thumb, s3_key_web, s3_key_full, caption, location, date, camera, lens, film_stock, sort_order, taken_at)`
 
-## React Compiler
+Image variants: thumbnail (400px), web (2000px), full (original).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Development
 
-## Expanding the ESLint configuration
+| Command | Purpose |
+|---|---|
+| `cd frontend && npm install` | install frontend deps |
+| `cd frontend && npm run dev` | start Next.js dev server (port 3000) |
+| `cd frontend && npm run build` | production build |
+| `cd backend && uv sync` | install Python deps (Phase 2+) |
+| `cd backend && uvicorn app.main:app --reload` | run API locally (Phase 2+) |
+| `cd backend && python -m cli add-post ...` | add a blog post via CLI (Phase 4+) |
+| `cd infra && cdk deploy` | deploy AWS infrastructure (Phase 3+) |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+See [AGENTS.md](./AGENTS.md) for the full agent workflow guide and [TODO.md](./TODO.md) for the roadmap.
+
+## Roadmap (phases)
+
+See [TODO.md](./TODO.md) for the full phased plan. Current phase: **0 — Monorepo bootstrap** (complete).
+
+## License
+
+Private — © arthurnovello
